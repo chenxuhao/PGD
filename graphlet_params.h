@@ -123,7 +123,13 @@ public:
 		graph = "sample_graph.csv";
 		macro_stats_filename = "";
 		micro_stats_filename = "";
-		workers = omp_get_max_threads();
+		int num_threads = 1;
+		#pragma omp parallel
+		{
+			num_threads = omp_get_num_threads();
+		}
+		//workers = omp_get_max_threads();
+		workers = num_threads;
 		block_size = 64;
 		ordering = "deg";
 		is_small_to_large = false;

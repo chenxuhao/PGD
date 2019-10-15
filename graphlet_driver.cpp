@@ -70,6 +70,7 @@ int main(int argc, char *argv[]) {
 	G.sort_edges(p.ordering, p.is_small_to_large);
 
 	if (p.verbose) cout << "edge/job ordering: " << p.ordering << ", time: " << get_time()-s <<endl;
+	printf("Launching OpenMP solver (%d threads) ...\n", p.workers);
 	if (p.is_micro_stats()) { G.graphlet_decomposition_micro(p.workers); }
 	else { G.graphlet_decomposition(p.workers); }
 	toc(s);

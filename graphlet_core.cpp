@@ -1403,6 +1403,7 @@ void graphlet_core::graphlet_decomposition(int max_num_workers) {
 	}
 	else {
 		if (verbose) cout << "[PGD: CSC Graph Rep.]  Using optimized sparse data structs" <<endl;
+		cout << "[cxh debug] graphlet_decomposition\n";
 		vector<long long> ind(n, 0);
 		sec = tic();
 		#pragma omp parallel for schedule(schedule_type,block_size) \
@@ -1446,6 +1447,9 @@ void graphlet_core::graphlet_decomposition(int max_num_workers) {
 		thread_n_count[0][9] += thread_n_count[tid][9];
 		thread_n_count[0][10] += thread_n_count[tid][10];
 	}
+	cout << "[cxh debug] thread_n_count[0][4] = " << thread_n_count[0][4] << "\n";
+	cout << "[cxh debug] thread_n_count[0][5] = " << thread_n_count[0][5] << "\n";
+	cout << "[cxh debug] thread_n_count[0][6] = " << thread_n_count[0][6] << "\n";
 	total_2_1edge = m;
 	total_2_indep = (n*(n-1) / 2.0) - m;
 	total_3_tris = thread_tmp_triangles[0] / 3.0;
