@@ -36,7 +36,11 @@ using namespace std;
 
 bool fexists(const char *filename) {
     ifstream ifile(filename);
+#ifdef WIN32
     return ifile!=0;
+#else
+    return !(ifile.fail());
+#endif
 }
 
 #if defined(_WIN32) || defined(_WIN64)
