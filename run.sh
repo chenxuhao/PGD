@@ -12,7 +12,8 @@ GRAPHS="citeseer"
 NTHREADS="56"
 #BLOCKS="1"
 #BLOCKS="1 2 4 8 16 32 64 128"
-OUTDIR=/h2/xchen/work/PGD/outputs
+INDIR=/net/ohm/export/iss/inputs/Mining
+OUTDIR=/net/ohm/export/iss/PGD/outputs
 
 for BIN in $BENCHMARKS; do
 	for GRAPH in $GRAPHS; do
@@ -20,11 +21,11 @@ for BIN in $BENCHMARKS; do
 			#for NB in $BLOCKS; do
 				export OMP_NUM_THREADS=$NT
 				#echo "running $BIN with $GRAPH (b=$NB,nthreads=$NT) on $(date)"
-				#echo "./$BIN -f ~/datasets/Mining/$GRAPH.cel -b $NB &> $OUTDIR/$BIN-$GRAPH-$NT-$NB.log"
-				#./$BIN -f ~/datasets/Mining/$GRAPH.cel -b $NB &> $OUTDIR/$BIN-$GRAPH-$NT-$NB.log
+				#echo "./$BIN -f $INDIR/$GRAPH.cel -b $NB &> $OUTDIR/$BIN-$GRAPH-$NT-$NB.log"
+				#./$BIN -f $INDIR/$GRAPH.cel -b $NB &> $OUTDIR/$BIN-$GRAPH-$NT-$NB.log
 				echo "running $BIN with $GRAPH (nthreads=$NT) on $(date)" >> $OUTDIR/date.log
-				echo "./$BIN -f ~/datasets/Mining/$GRAPH.cel &> $OUTDIR/$BIN-$GRAPH-$NT.log"
-				./$BIN -f ~/datasets/Mining/$GRAPH.cel &> $OUTDIR/$BIN-$GRAPH-$NT.log
+				echo "./$BIN -f $INDIR/$GRAPH.cel &> $OUTDIR/$BIN-$GRAPH-$NT.log"
+				./$BIN -f $INDIR/$GRAPH.cel &> $OUTDIR/$BIN-$GRAPH-$NT.log
 			#done
 		done
 	done
