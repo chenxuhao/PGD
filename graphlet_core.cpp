@@ -32,6 +32,7 @@
 
 #include "graphlet_core.h"
 #include <algorithm>
+#define FOUR_MOTIF
 
 using namespace graphlet;
 using namespace std;
@@ -1417,10 +1418,12 @@ void graphlet_core::graphlet_decomposition(int max_num_workers) {
 			triangles_and_wedges(v,u,T_vu,tri_count,W_u,w_local_count,ind);
 			solve_graphlet_equations(thread_n_count,n_count,thread_tmp_triangles,thread_tmp_3_star,thread_tmp_4_2edge,thread_tmp_3_1edge,
 					deg_v,deg_u,tri_count,w_local_count,m,n);
+			#ifdef FOUR_MOTIF
 			cycle(w_local_count, W_u, cycle4_count, v, ind);
 			clique(tri_count, T_vu, clique4_count, v, ind);
 			thread_tmp_cliques[omp_get_thread_num()] += clique4_count;
 			thread_tmp_cycles[omp_get_thread_num()] += cycle4_count;
+			#endif
 			reset_perfect_hash(v,ind);
 		}
 		toc(sec);
@@ -1447,9 +1450,9 @@ void graphlet_core::graphlet_decomposition(int max_num_workers) {
 		thread_n_count[0][9] += thread_n_count[tid][9];
 		thread_n_count[0][10] += thread_n_count[tid][10];
 	}
-	cout << "[cxh debug] thread_n_count[0][4] = " << thread_n_count[0][4] << "\n";
-	cout << "[cxh debug] thread_n_count[0][5] = " << thread_n_count[0][5] << "\n";
-	cout << "[cxh debug] thread_n_count[0][6] = " << thread_n_count[0][6] << "\n";
+	//cout << "[cxh debug] thread_n_count[0][4] = " << thread_n_count[0][4] << "\n";
+	//cout << "[cxh debug] thread_n_count[0][5] = " << thread_n_count[0][5] << "\n";
+	//cout << "[cxh debug] thread_n_count[0][6] = " << thread_n_count[0][6] << "\n";
 	total_2_1edge = m;
 	total_2_indep = (n*(n-1) / 2.0) - m;
 	total_3_tris = thread_tmp_triangles[0] / 3.0;
@@ -1459,6 +1462,7 @@ void graphlet_core::graphlet_decomposition(int max_num_workers) {
 	total_3_indep = total_3_indep - (total_3_tris+total_2_star+total_3_1edge);
 	total_wedges = (3*total_3_tris) + total_2_star;
 	global_cc = (3*(long double)total_3_tris)/(long double)total_wedges;
+#ifdef FOUR_MOTIF
 	total_4_clique = thread_tmp_cliques[0] / 6.0;
 	total_4_chordcycle = thread_n_count[0][3] - (6*total_4_clique);
 	total_4_cycle = thread_tmp_cycles[0] / 4.0;
@@ -1474,6 +1478,7 @@ void graphlet_core::graphlet_decomposition(int max_num_workers) {
 	total_4_tri = thread_n_count[0][10] - total_4_tailed_tris;
 	total_4_tri = total_4_tri / 3.0;
 	total_4_indep = compute_4indep(n);
+#endif
 	if (verbose) { test_graphlet_counts(thread_n_count);}
 }
 
@@ -2064,13 +2069,16 @@ void graphlet_core::print_GFD() {
  */
 void graphlet_core::print_graphlet_counts() {
 	print_line(60,"*");
+#ifdef DISCONNECT
 	cout << "total_2_1edge = " << total_2_1edge <<endl;
 	cout << "total_2_indep = " << total_2_indep <<endl;
 	print_line(40);
-	cout << "total_3_tris = " << total_3_tris <<endl;
-	cout << "total_2_star = " << total_2_star <<endl;
 	cout << "total_3_1edge = " << total_3_1edge <<endl;
 	cout << "total_3_indep = " << total_3_indep <<endl;
+#endif
+	cout << "total_3_tris = " << total_3_tris <<endl;
+	cout << "total_2_star = " << total_2_star <<endl;
+#ifdef FOUR_MOTIF
 	print_line(40);
 	cout << "total_4_clique = " << total_4_clique <<endl;
 	cout << "total_4_chordcycle = " << total_4_chordcycle <<endl;
@@ -2078,6 +2086,7 @@ void graphlet_core::print_graphlet_counts() {
 	cout << "total_4_cycle = " << total_4_cycle <<endl;
 	cout << "total_3_star = " << total_3_star <<endl;
 	cout << "total_4_path = " << total_4_path <<endl;
+#ifdef DISCONNECT
 	print_line(40);
 	cout << "total_4_1edge = " << total_4_1edge <<endl;
 	cout << "total_4_2edge = " << total_4_2edge <<endl;
@@ -2085,6 +2094,8 @@ void graphlet_core::print_graphlet_counts() {
 	cout << "total_4_tri = " << total_4_tri <<endl;
 	cout << "total_4_indep = " << total_4_indep <<endl;
 	print_line(60,"*");
+#endif
+#endif
 }
 
 string graphlet_core::get_graphlet_names_line(string delim) {

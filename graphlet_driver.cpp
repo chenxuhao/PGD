@@ -81,9 +81,9 @@ int main(int argc, char *argv[]) {
 	/// Save total counts of each motif (global macro stats) to the file specified by the user.
 	if (p.is_macro_stats()) G.write_macro_stats(p.macro_stats_filename);
 	if (p.is_micro_stats()) G.write_micro_stats(p.micro_stats_filename);
-	G.print_GFD();
-	G.print_connected_GFD();
-	G.print_disconnected_GFD();
+	//G.print_GFD();
+	//G.print_connected_GFD();
+	//G.print_disconnected_GFD();
 	if (p.is_micro_stats()) {
 		univar_stats s;
 		s.compute_univariate_stats(G.local_4_clique);
